@@ -1,84 +1,133 @@
 document.addEventListener('DOMContentLoaded', function () {
   const modalBackground = document.querySelector(".bground");
   const modalButtons = document.querySelectorAll(".modal-btn");
-  const closeModalButton = document.querySelector(".close-modal-btn");
+  const closeModalBtn = document.querySelector(".close-modal-btn");
   const form = document.getElementById('tournamentForm');
   const confirmationMessage = document.getElementById('confirmationMessage');
+  const closeConfirmationBtn = document.querySelector("#confirmationMessage .close-modal-btn"); // Bouton pour fermer la confirmation
+    const fermerBtn = document.querySelector("#confirmationMessage .fermer-btn"); // Bouton "Fermer" dans la confirmation
 
-  modalButtons.forEach(button => button.addEventListener("click", function () {
-    modalBackground.style.display = "block";
-  }));
 
-  closeModalButton.addEventListener("click", function () {
-    modalBackground.style.display = "none";
+  modalButtons.forEach(button => button.addEventListener("click", () => modalBackground.style.display = "block"));
+  closeModalBtn.addEventListener("click", () => modalBackground.style.display = "none");
+  modalButtons.forEach(button => button.addEventListener("click", () => modalBackground.style.display = "block"));
+  closeModalBtn.addEventListener("click", () => modalBackground.style.display = "none");
+
+  // Fermer la modal de confirmation
+  closeConfirmationBtn.addEventListener("click", () => {
+      confirmationMessage.style.display = "none";
+      modalBackground.style.display = "none"; 
   });
 
+  // Fermer la modal en cliquant sur "Fermer"
+  fermerBtn.addEventListener("click", () => {
+      confirmationMessage.style.display = "none";
+      modalBackground.style.display = "none"; 
+  });
+
+  // Ajouter un écouteur pour fermer la modal si on clique en dehors de la fenêtre de confirmation (facultatif)
+  window.addEventListener("click", function(event) {
+      if (event.target == modalBackground) {
+          confirmationMessage.style.display = "none";
+          modalBackground.style.display = "none";
+      }
+  });
+
+  
   function resetErrors() {
-    document.querySelectorAll('.error-message').forEach(element => element.remove());
-    document.querySelectorAll('.error, .error-group').forEach(element => element.classList.remove('error', 'error-group'));
+      document.querySelectorAll('.error-message').forEach(el => el.remove());
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error')); 
   }
 
-  function createErrorMessage(message) {
-    const errorMessageElement = document.createElement("span");
-    errorMessageElement.textContent = message; 
-    errorMessageElement.classList.add('error-message');
-    return errorMessageElement;
-  }
+  function showErrorMessage(field, message, isGroup = false) {
+      const container = field.closest('.formData');
+      let errorMessage = container.querySelector('.error-message');
+      if (!errorMessage) {
+          errorMessage = document.createElement('p');
+          errorMessage.classList.add('error-message');
+          container.appendChild(errorMessage);
+      }
+      errorMessage.textContent = message;
 
-  function triggerError(field, message) {
-    const errorContainer = field.closest('.formData');
-    const errorMessageElement = createErrorMessage(message);
-
-    errorContainer.appendChild(errorMessageElement);
-    errorContainer.classList.add('error'); 
-  }
-
-  function validateField(field, isValid, message) {
-    if (!isValid) {
-      triggerError(field, message);
-      return false;
-    }
-    return true;
+      if (isGroup) {
+          const inputs = container.querySelectorAll('input'); 
+          inputs.forEach(input => input.classList.add('error'));
+      } else {
+          const input = container.querySelector('input'); 
+          if (input) input.classList.add('error');
+      }
   }
 
   function validateForm() {
-    resetErrors(); 
-    let formIsValid = true;
+      resetErrors();
+      let isValid = true;
 
-    const firstName = document.getElementById('first');
-    const lastName = document.getElementById('last');
-    const email = document.getElementById('email');
-    const birthdate = document.getElementById('birthdate');
-    const terms = document.getElementById('checkbox1');
-    const quantity = document.getElementById('quantity');
-    const locationRadioButtons = document.querySelectorAll('input[name="location"]:checked');
-    const hasSelectedLocation = locationRadioButtons.length > 0;
+      const firstName = document.getElementById('first');
+      const lastName = document.getElementById('last');
+      const email = document.getElementById('email');
+      const birthdate = document.getElementById('birthdate');
+      const terms = document.getElementById('checkbox1');
+      const quantity = document.getElementById('quantity');
+      const quantityValue = quantity.value.trim();
+      const location = document.querySelector('input[name="location"]:checked');
 
-    formIsValid &= validateField(firstName, firstName.value.trim().length >= 2, 'Veuillez entrer 2 caractères ou plus pour le champ du prénom.');
-    formIsValid &= validateField(lastName, lastName.value.trim().length >= 2, 'Veuillez entrer 2 caractères ou plus pour le champ du nom.');
-    formIsValid &= validateField(email, email.value.trim().includes('@'), 'L\'adresse e-mail est invalide.');
-    formIsValid &= validateField(birthdate, birthdate.value.trim() !== '', 'Veuillez entrer votre date de naissance.');
-    formIsValid &= validateField(terms, terms.checked, 'Vous devez accepter les conditions d\'utilisation.');
-    formIsValid &= validateField(document.querySelector('.location-container'), hasSelectedLocation, 'Veuillez choisir une option de tournoi.');
-    formIsValid &= validateField(quantity, !isNaN(quantity.value) && quantity.value >= 0, 'Veuillez entrer un nombre valide de tournois.');
+      if (!firstName.value.trim() || firstName.value.trim().length < 2) {
+          showErrorMessage(firstName, 'Veuillez entrer 2 caractères ou plus pour le champ du prénom.');
+          isValid = false;
+      }
 
-    return formIsValid;
+      if (!lastName.value.trim() || lastName.value.trim().length < 2) {
+          showErrorMessage(lastName, 'Veuillez entrer 2 caractères ou plus pour le champ du nom.');
+          isValid = false;
+      }
+
+      if (!email.value.trim() || !email.value.includes('@')) {
+          showErrorMessage(email, 'L\'adresse e-mail est invalide.');
+          isValid = false;
+      }
+
+      if (!birthdate.value.trim()) {
+          showErrorMessage(birthdate, 'Veuillez entrer votre date de naissance.');
+          isValid = false;
+      }
+
+      if (!terms.checked) {
+          showErrorMessage(terms, 'Vous devez accepter les conditions d\'utilisation.', true);
+          isValid = false;
+      }
+
+      const numericQuantity = parseInt(quantityValue, 10);
+
+      if (isNaN(numericQuantity) || numericQuantity < 0) {
+        showErrorMessage(quantity, 'Veuillez entrer un nombre valide de tournois.');
+        isValid = false;
+      }
+
+    //   if (typeof quantity.value === "string" || isNaN(quantity.value) || quantity.value < 0) {
+    //       showErrorMessage(quantity, 'Veuillez entrer un nombre valide de tournois.');
+    //       isValid = false;
+    //   }
+
+
+      if (!location) {
+          showErrorMessage(document.querySelector('input[name="location"]').parentElement, 'Veuillez choisir une option de tournoi.', true);
+          isValid = false;
+      }
+
+      return isValid;
   }
 
   form.addEventListener('submit', function (event) {
-    event.preventDefault(); 
-    const isValid = validateForm(); 
+      event.preventDefault();
+      const isValid = validateForm();
 
-    if (isValid) {
-      console.log('Le formulaire est valide.');
-      confirmationMessage.style.display = 'block';
-      setTimeout(() => {
-        confirmationMessage.style.display = 'none';
-        modalBackground.style.display = "none"; 
-      }, 5000);
-      form.reset(); 
+      if (isValid) {
+        console.log('Le formulaire est valide.');
+        modalBackground.style.display = 'block'; // Afficher l'arrière-plan de la modal
+        confirmationMessage.style.display = 'flex'; // Assurez-vous que c'est 'flex' pour le montrer
+        
     } else {
-      console.log('Le formulaire contient des erreurs.');
+        console.log('Le formulaire contient des erreurs.');
     }
   });
 });
