@@ -72,7 +72,7 @@ img {
  
   color: #FF001B;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .topnav a {display: none;}
   .topnav a.icon {
     float: right;
@@ -420,7 +420,7 @@ input[type='radio']:checked + .checkbox-label .checkbox-icon,
   font-size: 16px;
 }
 .hero-section {
-  min-height: 93vh;
+  min-height: 657px;
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -451,7 +451,7 @@ input[type='radio']:checked + .checkbox-label .checkbox-icon,
   z-index: 1;
 }
 .hero-headline {
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: normal;
   white-space: nowrap;
 }
