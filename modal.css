@@ -14,7 +14,7 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  background-image: url("background.png");
+  /* background-image: url("background.png"); */
   font-family: var(--font-default);
   font-size: 18px;
   max-width: 1300px;
@@ -81,6 +81,9 @@ img {
 }
 
 @media screen and (max-width: 768px) {
+  body{
+    overflow-y: none;
+  }
   .topnav.responsive {position: relative;}
   .topnav.responsive .icon {
     position: absolute;
@@ -162,7 +165,8 @@ main {
 }
 
 .bground {
-  background-color: white;
+  background-color: #232323;
+  border-radius: 10px;
   display: none;
   position: fixed;
   z-index: 1;
@@ -197,7 +201,8 @@ label {
   font-size: 17px;
   font-weight: normal;
   display: inline-block;
-  margin-bottom: 11px;
+  margin: 10px 0;
+
 }
 input {
   padding: 8px;
@@ -418,6 +423,7 @@ input[type='radio']:checked + .checkbox-label .checkbox-icon,
 .text-label {
   font-weight: normal;
   font-size: 16px;
+  margin-top: 10px;
 }
 .hero-section {
   min-height: 657px;
@@ -567,7 +573,7 @@ footer {
   font-family: var(--font-default);
   font-size: 2.25rem;
   font-weight: 400;
-  background-color: #2d2b2b;
+  background-color: #232323;
   text-transform: capitalize;
   position: absolute;
   height: 100%;
@@ -598,6 +604,22 @@ footer {
 }
 
 @media screen and (max-width: 800px) {
+  
+  .text-control {
+    margin: 0;
+    padding: 8px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    height: 48px;
+  }
+
+  label {
+    font-family: var(--font-default);
+    font-size: 14px;
+    font-weight: normal;
+    display: inline-block;
+  }
   .hero-section {
     display: block;
     box-shadow: unset;
@@ -645,9 +667,9 @@ footer {
 @media screen and (min-width: 768px) {
 
   .bground {
-top :0;
-    /* background-color: rgba(26, 39, 156, 0.4); */
-    background-color: white;
+    top :0;
+     background-color: rgba(26, 39, 156, 0.4); 
+    /* background-color: white; */
   }
 }
 
