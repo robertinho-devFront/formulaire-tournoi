@@ -9,32 +9,51 @@ document.addEventListener("DOMContentLoaded", function () {
   ); // Bouton pour fermer la confirmation
   const fermerBtn = document.querySelector("#confirmationMessage .fermer-btn"); // Bouton "Fermer" dans la confirmation
 
+  function closeAndReset() {
+    confirmationMessage.style.display = "none";
+    modalBackground.style.display = "none";
+    document.body.style.overflow = ""; // Rétablir le style pour permettre à nouveau le défilement
+    form.reset(); // Réinitialiser le formulaire
+  }
+
+  // Fermer la modal de confirmation
+  closeConfirmationBtn.addEventListener("click", closeAndReset);
+  fermerBtn.addEventListener("click", closeAndReset);
+
+  // Ajouter un écouteur pour fermer la modal si on clique en dehors de la fenêtre de confirmation
+  window.addEventListener("click", function (event) {
+    if (event.target == modalBackground) {
+      closeAndReset();
+    }
+  });
+  
   modalButtons.forEach((button) =>
     button.addEventListener("click", () => {
       modalBackground.style.display = "block";
       document.body.style.overflow = "hidden"; // Ajoute ce style pour empêcher le défilement
     })
   );
+
   closeModalBtn.addEventListener("click", () => {
     modalBackground.style.display = "none";
-    document.body.style.overflow = ""; // Retire le style pour permettre à nouveau le défilement
+    document.body.style.overflow = ""; 
+    form.reset();// Retire le style pour permettre à nouveau le défilement
   });
   // Fermer la modal de confirmation
   closeConfirmationBtn.addEventListener("click", () => {
     confirmationMessage.style.display = "none";
     modalBackground.style.display = "none";
   });
-
   // Fermer la modal en cliquant sur "Fermer"
   fermerBtn.addEventListener("click", () => {
     confirmationMessage.style.display = "none";
     modalBackground.style.display = "none";
   });
-
   // A un écouteur pour fermer la modal si on clique en dehors de la fenêtre de confirmation (facultatif)
   window.addEventListener("click", function (event) {
     if (event.target == modalBackground) {
-      confirmationMessage.style.display = "none";
+      document.body.style.overflow = ""; 
+        form.reset();
       modalBackground.style.display = "none";
     }
   });
@@ -148,11 +167,17 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Le formulaire est valide.");
       modalBackground.style.display = "block"; // Afficher l'arrière-plan de la modal
       confirmationMessage.style.display = "flex"; // Assurez-vous que c'est 'flex' pour le montrer
+      // Attendre 5 secondes avant de cacher la confirmation et réinitialiser le formulaire
+      setTimeout(() => {
+        confirmationMessage.style.display = "none";
+        modalBackground.style.display = "none"; 
+        document.body.style.overflow = ""; // Permettre à nouveau le défilement
+        form.reset(); // Réinitialiser le formulaire
+      }, 5000); // Définir le délai ici
     } else {
       console.log("Le formulaire contient des erreurs.");
     }
   });
 });
 
-// (form.reset()) après un certain délai ou lorsque la modal de confirmation est fermée,
-// pour que l'utilisateur puisse soumettre à nouveau le formulaire si nécessaire.
+
