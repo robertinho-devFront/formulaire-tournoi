@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const firstName = document.getElementById("first");
     const lastName = document.getElementById("last");
     const email = document.getElementById("email");
-    const birthdate = document.getElementById("birthdate");
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|fr|net|org|edu|info|io|co|uk)$/; // Expression régulière pour la validation de l'email    const birthdate = document.getElementById("birthdate");
     const terms = document.getElementById("checkbox1");
     const quantity = document.getElementById("quantity");
     const quantityValue = quantity.value.trim();
@@ -113,10 +113,10 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     }
 
-    if (!email.value.trim() || !email.value.includes("@")) {
+    if (!email.value.trim() || !emailRegex.test(email.value)) {
       showErrorMessage(email, "L'adresse e-mail est invalide.");
       isValid = false;
-    }
+  }
 
     if (!birthdate.value.trim()) {
       showErrorMessage(birthdate, "Veuillez entrer votre date de naissance.");
@@ -142,10 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     }
 
-    //   if (typeof quantity.value === "string" || isNaN(quantity.value) || quantity.value < 0) {
-    //       showErrorMessage(quantity, 'Veuillez entrer un nombre valide de tournois.');
-    //       isValid = false;
-    //   }
+ 
 
     if (!location) {
       showErrorMessage(
